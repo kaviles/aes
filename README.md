@@ -3,7 +3,7 @@ Implementations of AES
 
 1. To run Python tests:
 
-    * python3 tests.py
+    * python -m unittest discover
 
 2. To run CPP tests:
 
