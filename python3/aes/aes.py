@@ -209,12 +209,47 @@ def aes_cbc_encrypt(plaintext, key, keySize, iv):
 
     return ciphertext
 
+def aes_cfb_encrypt(plaintext, key, keySize, iv):
+
+    ptlen = len(plaintext)
+    exKeySize = 176
+    rounds = 11
+    exKey = expand_key(key, keySize, exKeySize)
+
+    ciphertext = []
+
+    block = [0] * blockSize
+
+    for j in range(0, blockSize):
+        block[j] = iv[j]
+
+    aes_encrypt_block(block, exKey, 176, rounds)
+
+    for j in range(0, blockSize):
+        block[j] = block[j] ^ plaintext[j]
+
+    ciphertext.extend(block)
+    
+    i = blockSize
+    while i < ptlen:
+
+        block = [0] * blockSize
+
+        for j in range(0, blockSize):
+            block[j] = ciphertext[-blockSize + j]
+
+        aes_encrypt_block(block, exKey, 176, rounds)
+
+        for j in range(i, min(i+blockSize, ptlen)):
+            block[j % blockSize] = block[j % blockSize] ^ plaintext[j]
+
+        ciphertext.extend(block)
+
+        i = i + blockSize
+
+    return ciphertext
 
 def aes_encrypt(plaintext, key, keySize, iv=None, t='hs', m='ecb'):
-
-    ptData = [0] * blockSize
-    keyData = [0] * keySize
-    ivData = [0] * blockSize
 
     if t == 'hs': # Hex String
         ptData = hexStringToIntList(plaintext, blockSize)
@@ -237,13 +272,19 @@ def aes_encrypt(plaintext, key, keySize, iv=None, t='hs', m='ecb'):
         ciphertext = aes_ecb_encrypt(ptData, keyData, keySize)
     elif m == 'cbc':
         ciphertext = aes_cbc_encrypt(ptData, keyData, keySize, ivData)
-    elif m == 'cbf':
-        pass
+    elif m == 'cfb':
+        ciphertext = aes_cfb_encrypt(ptData, keyData, keySize, ivData)
     else:
         raise ValueError("Invalid mode of encryption: " + str(m))
 
     if t == 'hs':
-        return intListToHexString(ciphertext)
+        res = intListToHexString(ciphertext)
 
     elif t == 's' or t == 'b':
-        return intListByteString(ciphertext)
+
+        res = intListByteString(ciphertext)
+
+    if m == 'cfb':
+        res = res[:len(plaintext)]            
+
+    return res
