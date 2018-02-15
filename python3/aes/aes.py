@@ -175,6 +175,40 @@ def aes_ecb_encrypt(plaintext, key, keySize):
 
     return ciphertext
 
+def aes_cbc_encrypt(plaintext, key, keySize, iv):
+
+    ptlen = len(plaintext)
+    exKeySize = 176
+    rounds = 11
+    exKey = expand_key(key, keySize, exKeySize)
+
+    ciphertext = []
+
+    i = 0
+
+    block = [0] * blockSize
+
+    for j in range(0, blockSize):
+        block[j] = plaintext[j] ^ iv[j]
+
+    aes_encrypt_block(block, exKey, 176, rounds)
+    ciphertext.extend(block)
+
+    i = i + blockSize
+
+    while i < ptlen:
+        block = [0] * blockSize
+
+        for j in range(i, min(i+blockSize, ptlen)):
+            block[j % blockSize] = plaintext[j] ^ ciphertext[-blockSize + j]
+
+        aes_encrypt_block(block, exKey, 176, rounds)
+        ciphertext.extend(block)
+
+        i = i + blockSize
+
+    return ciphertext
+
 
 def aes_encrypt(plaintext, key, keySize, iv=None, t='hs', m='ecb'):
 
@@ -202,7 +236,7 @@ def aes_encrypt(plaintext, key, keySize, iv=None, t='hs', m='ecb'):
     if m == 'ecb':
         ciphertext = aes_ecb_encrypt(ptData, keyData, keySize)
     elif m == 'cbc':
-        pass
+        ciphertext = aes_cbc_encrypt(ptData, keyData, keySize, ivData)
     elif m == 'cbf':
         pass
     else:
