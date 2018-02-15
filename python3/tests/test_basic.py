@@ -1,6 +1,6 @@
 import unittest
-from constants import *
-from aes import *
+from aes.constants import *
+from aes.aes import *
 
 class TestAES(unittest.TestCase):
 

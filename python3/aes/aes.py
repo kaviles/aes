@@ -1,4 +1,5 @@
 from constants import *
+from utils import *
 
 def mod_multiply(value1, value2):
 
@@ -147,12 +148,68 @@ def aes_encrypt_block(block, exKey, exKeySize, rounds):
             mix_columns(block)
 
     i = i + 1
-    
+
     # Add Round Key - Final Round
     add_round_key(block, exKey, exKeySize, i)
 
+def aes_ecb_encrypt(plaintext, key, keySize):
+
+    ptlen = len(plaintext)
+    exKeySize = 176
+    rounds = 11
+    exKey = expand_key(key, keySize, exKeySize)
+
+    ciphertext = []
+
+    i = 0
+    while i < ptlen:
+        block = [0] * blockSize
+
+        for j in range(i, min(i+blockSize, ptlen)):
+            block[j % blockSize] = plaintext[j]
+
+        aes_encrypt_block(block, exKey, 176, rounds)
+        ciphertext.extend(block)
+
+        i = i + blockSize
+
+    return ciphertext
 
 
+def aes_encrypt(plaintext, key, keySize, iv=None, t='hs', m='ecb'):
 
+    ptData = [0] * blockSize
+    keyData = [0] * keySize
+    ivData = [0] * blockSize
 
+    if t == 'hs': # Hex String
+        ptData = hexStringToIntList(plaintext, blockSize)
+        keyData = hexStringToIntList(key, keySize)
+        
+        if iv:
+            ivData = hexStringToIntList(iv, blockSize)
+        
+    elif t == 's' or t == 'b': # String or Bytes
+        ptData = stringToIntList(plaintext, blockSize)
+        keyData = stringToIntList(key, keySize)
+        
+        if iv:
+            ivData = bytesToIntList(iv, blockSize)
+    else:
+        raise ValueError("Invalid input type: " + str(t))
 
+    ciphertext = []
+    if m == 'ecb':
+        ciphertext = aes_ecb_encrypt(ptData, keyData, keySize)
+    elif m == 'cbc':
+        pass
+    elif m == 'cbf':
+        pass
+    else:
+        raise ValueError("Invalid mode of encryption: " + str(m))
+
+    if t == 'hs':
+        return intListToHexString(ciphertext)
+
+    elif t == 's' or t == 'b':
+        return intListByteString(ciphertext)
