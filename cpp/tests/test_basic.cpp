@@ -2,8 +2,7 @@
 #include <math.h>
 
 #include "catch.hpp"
-#include "aes.hpp"
-
+#include "../../aes.hpp"
 
 TEST_CASE( "bit_count", "[bit, count]" ) {
     

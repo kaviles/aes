@@ -1,6 +1,8 @@
 #ifndef AES_HPP
 #define AES_HPP
 
+#include <string.h>
+
 const unsigned short poly = 0x11b;
 const unsigned char blockSize = 16;
 
@@ -53,5 +55,19 @@ void substitute(unsigned char *block);
 void shift_rows_left(unsigned char *block);
 void mix_columns(unsigned char *block);
 void aes_encrypt_block(unsigned char *block, unsigned char *exKey, unsigned char exKeySize, unsigned char rounds);
+void aes_ecb_encrypt(unsigned char *plaintext, unsigned short plaintextSize, 
+    unsigned char *ciphertext, unsigned short ciphertextSize, 
+    unsigned char *key, unsigned char keySize);
+void aes_cbc_encrypt(unsigned char *plaintext, unsigned short plaintextSize, 
+    unsigned char *ciphertext, unsigned short ciphertextSize, 
+    unsigned char *key, unsigned char keySize, unsigned char *iv);
+void aes_cfb_encrypt(unsigned char *plaintext, unsigned short plaintextSize, 
+    unsigned char *ciphertext, unsigned short ciphertextSize, 
+    unsigned char *key, unsigned char keySize, unsigned char *iv);
+unsigned char aes_encrypt(const char *plaintext, unsigned short plaintextSize, 
+    char *ciphertext, unsigned short ciphertextSize, 
+    const char *key, unsigned char keySize, 
+    const char *iv, unsigned char ivSize,
+    unsigned char t, unsigned char m);
 
 #endif

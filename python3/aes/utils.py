@@ -31,8 +31,23 @@ def hexStringToIntList(data, padVal):
 		intList.append(int(data[i:i+2], 16))
 
 	l = len(intList)
-	if l % padVal:
-		intList.extend([0] * (padVal - l))
+	rem = l % padVal
+	if rem:
+		intList.extend([0] * (padVal - rem))
+
+	return intList
+
+def binStringToIntList(data, bitVal):
+
+	l = len(data)
+	intList = []
+	for i in range(0, l, 8):
+		intList.append(int(data[i:i+8].ljust(8, '0')))
+
+	# l = len(intList)
+	# rem = l % 8
+	# if rem:
+	# 	intList.extend([0] * (8 - rem))
 
 	return intList
 
@@ -46,3 +61,31 @@ def bytesToIntList(data, padVal):
 		intList[i] = ord(data[i])
 
 	return intList
+
+def removeCharacter(string, c):
+
+	return string.replace(c, "")
+
+def getValuesFromFile(file, iv=None):
+
+	key = file.readline() # Delete newline (\r\n) characters
+
+	if key:
+		key = removeCharacter(key, "\n")
+
+	if iv:
+
+		iv = file.readline()
+		if iv:
+			iv = removeCharacter(iv, "\n")
+
+	plaintext = file.readline()
+	if plaintext:
+		plaintext = removeCharacter(plaintext, "\n")
+
+	ciphertext = file.readline()
+	if ciphertext:
+		ciphertext = removeCharacter(ciphertext, "\n")
+
+	return (key, iv, plaintext, ciphertext)
+
