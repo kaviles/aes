@@ -114,109 +114,109 @@ TEST_CASE( "cfb_128", "[cfb, 128, kat, mmt]" ) {
         }
     }
 
-    SECTION ( "CFB8" ) {
+    // SECTION ( "CFB8" ) {
 
-        i=4;
+    //     i=4;
 
-        while (i < filenames8Size) {
+    //     while (i < filenames8Size) {
 
-            filename[0] = '\0';
-            sprintf(filename, "%s%s%s", relative, filenames8[i], extension);
+    //         filename[0] = '\0';
+    //         sprintf(filename, "%s%s%s", relative, filenames8[i], extension);
 
-            file = fopen(filename, "r");
+    //         file = fopen(filename, "r");
 
-            if (file) {
+    //         if (file) {
 
-                fgets(key, CHUNK, file); // Reads first line which is set to "[ENCRYPT]"
+    //             fgets(key, CHUNK, file); // Reads first line which is set to "[ENCRYPT]"
 
-                j = 0;
-                while (1) {
+    //             j = 0;
+    //             while (1) {
 
-                    sectionName[0] = '\0';
-                    sprintf(sectionName, "%s %hu", filenames8[i], j);
-                    printf("%s\n", sectionName);
+    //                 sectionName[0] = '\0';
+    //                 sprintf(sectionName, "%s %hu", filenames8[i], j);
+    //                 printf("%s\n", sectionName);
 
-                    // This doesn't work for some reason.
-                    // SECTION ( sectionName ) { 
+    //                 // This doesn't work for some reason.
+    //                 // SECTION ( sectionName ) { 
 
-                        if (getValuesFromFile(file, key, CHUNK, plaintext, CHUNK, iv, CHUNK, ciphertext, CHUNK)) {
+    //                     if (getValuesFromFile(file, key, CHUNK, plaintext, CHUNK, iv, CHUNK, ciphertext, CHUNK)) {
 
-                            keyLen = strlen(key);
-                            ivLen = strlen(iv);
-                            ptLen = strlen(plaintext);
-                            ctLen = strlen(ciphertext);
-                            ctResLen = ctLen;
+    //                         keyLen = strlen(key);
+    //                         ivLen = strlen(iv);
+    //                         ptLen = strlen(plaintext);
+    //                         ctLen = strlen(ciphertext);
+    //                         ctResLen = ctLen;
 
-                            aes_encrypt(plaintext, ptLen, ctRes, ctResLen, key, keyLen, iv, ivLen, 0, 2);
+    //                         aes_encrypt(plaintext, ptLen, ctRes, ctResLen, key, keyLen, iv, ivLen, 0, 2);
 
-                            for (k = 0; k < ctLen; k++) {
-                                REQUIRE(ctRes[k] == ciphertext[k]);
-                            }   
-                        }
-                        else {
-                            break;
-                        }
+    //                         for (k = 0; k < ctLen; k++) {
+    //                             REQUIRE(ctRes[k] == ciphertext[k]);
+    //                         }   
+    //                     }
+    //                     else {
+    //                         break;
+    //                     }
 
-                    // }
+    //                 // }
 
-                    j += 4;
-                }
-            }
+    //                 j += 4;
+    //             }
+    //         }
 
-            fclose(file);
-            i++;
-        }
-    }
+    //         fclose(file);
+    //         i++;
+    //     }
+    // }
 
-    SECTION ( "CFB1" ) {
+    // SECTION ( "CFB1" ) {
 
-        while (i < filenames1Size) {
+    //     while (i < filenames1Size) {
 
-            filename[0] = '\0';
-            sprintf(filename, "%s%s%s", relative, filenames1[i], extension);
+    //         filename[0] = '\0';
+    //         sprintf(filename, "%s%s%s", relative, filenames1[i], extension);
 
-            file = fopen(filename, "r");
+    //         file = fopen(filename, "r");
 
-            if (file) {
+    //         if (file) {
 
-                fgets(key, CHUNK, file); // Reads first line which is set to "[ENCRYPT]"
+    //             fgets(key, CHUNK, file); // Reads first line which is set to "[ENCRYPT]"
 
-                j = 0;
-                while (1) {
+    //             j = 0;
+    //             while (1) {
 
-                    sectionName[0] = '\0';
-                    sprintf(sectionName, "%s %hu", filenames1[i], j);
-                    // printf("%s\n", sectionName);
+    //                 sectionName[0] = '\0';
+    //                 sprintf(sectionName, "%s %hu", filenames1[i], j);
+    //                 // printf("%s\n", sectionName);
 
-                    // This doesn't work for some reason.
-                    // SECTION ( sectionName ) { 
+    //                 // This doesn't work for some reason.
+    //                 // SECTION ( sectionName ) { 
 
-                        if (getValuesFromFile(file, key, CHUNK, plaintext, CHUNK, iv, CHUNK, ciphertext, CHUNK)) {
+    //                     if (getValuesFromFile(file, key, CHUNK, plaintext, CHUNK, iv, CHUNK, ciphertext, CHUNK)) {
 
-                            keyLen = strlen(key);
-                            ivLen = strlen(iv);
-                            ptLen = strlen(plaintext);
-                            ctLen = strlen(ciphertext);
-                            ctResLen = ctLen;
+    //                         keyLen = strlen(key);
+    //                         ivLen = strlen(iv);
+    //                         ptLen = strlen(plaintext);
+    //                         ctLen = strlen(ciphertext);
+    //                         ctResLen = ctLen;
 
-                            aes_encrypt(plaintext, ptLen, ctRes, ctResLen, key, keyLen, iv, ivLen, 0, 2);
+    //                         aes_encrypt(plaintext, ptLen, ctRes, ctResLen, key, keyLen, iv, ivLen, 0, 2);
 
-                            for (k = 0; k < ctLen; k++) {
-                                REQUIRE(ctRes[k] == ciphertext[k]);
-                            }   
-                        }
-                        else {
-                            break;
-                        }
+    //                         for (k = 0; k < ctLen; k++) {
+    //                             REQUIRE(ctRes[k] == ciphertext[k]);
+    //                         }   
+    //                     }
+    //                     else {
+    //                         break;
+    //                     }
 
-                    // }
+    //                 // }
 
-                    j += 4;
-                }
-            }
+    //                 j += 4;
+    //             }
+    //         }
 
-            fclose(file);
-            i++;
-        }
-    }
+    //         fclose(file);
+    //         i++;
+    //     }
+    // }
 }
