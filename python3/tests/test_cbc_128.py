@@ -32,7 +32,7 @@ class Test_ECB128(unittest.TestCase):
 
                     key, iv, plaintext, ciphertext = getValuesFromFile(f, iv=True)
 
-                    if key and plaintext and ciphertext:
+                    if key and iv and plaintext and ciphertext:
 
                         ctRes = aes_encrypt(plaintext, key, 16, iv, m='cbc')
                         self.assertEqual(ctRes, ciphertext)
